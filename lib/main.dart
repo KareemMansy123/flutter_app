@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/main_screen.dart';
+import 'package:flutter_app/presentation/bloc/news_bloc.dart';
+import 'package:flutter_app/presentation/ui/main_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
-void main() {
+void main()async {
+  // await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -39,7 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const MainScreen()// This trailing comma makes auto-formatting nicer for build methods.
+      body: BlocProvider(
+        create: (context) => NewsBloc(httpClient: http.Client())..add(FetchNews()),
+        child: NewsPage(),
+      )
+      // const MainScreen()// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
